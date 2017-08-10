@@ -1,0 +1,22 @@
+html
+  name: lang value:en
+containsAttribute() fails
+isDefined() fails
+  lang=en
+  head
+    title
+      name: _implied_ value:true
+      _implied_=true
+      Data in the heading
+  body
+    name: _implied_ value:true
+    _implied_=true
+    h1
+      Welcome to Sean's page
+    p
+      This is your 
+      i
+        first day
+       of the week
+    h2
+      this is an h2 tag
