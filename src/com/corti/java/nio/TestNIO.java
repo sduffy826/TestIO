@@ -3,7 +3,10 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 public class TestNIO {
  
@@ -17,14 +20,22 @@ public class TestNIO {
     if (false) myTest.testPath();
     if (false) myTest.testFiles();
     if (false) myTest.testAttributes();
-    if (true)  myTest.listDirs(Paths.get("c:\\seanduff"));
+    if (false)  myTest.listDirs(Paths.get("/home/dev"));
+    if (false)  myTest.listDirs(Paths.get("/home/dev/thisIsADummyFile.txt"));
+    if (false) {
+      List<String> aList = myTest.getDirsString("/home/dev/workspace");
+      for (String aStr : aList) System.out.println(aStr);
+    }
+    if (true) myTest.testTree("/home/dev/workspace/TestIO");
   }
 
   public void testAttributes() {
-    String path = "c:/temp/foo.txt";
+    String path = "demo.txt";
 
     try {
       Path file = Paths.get(path);
+      System.out.println("getFileName: " + file.getFileName());
+      
       BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
       System.out.println("creationTime     = " + attr.creationTime());
       System.out.println("lastAccessTime   = " + attr.lastAccessTime());
@@ -49,11 +60,13 @@ public class TestNIO {
   public void testPath() {
     // A path is a reference to a file path, it is equivalent to 
     // java.io.File
-    Path path = Paths.get("c:\\temp\\temp2\\test.txt");
+    Path path = Paths.get("/home/dev/thisIsADummyFile.txt");
+    path = Paths.get("~/thisIsADummyFile.txt");
     System.out.println("Number of name elements in the path (# nodes): " + path.getNameCount());
-    System.out.println("File name: " + path.getFileName());
-    System.out.println("File root: " + path.getRoot());
+    System.out.println("File name:   " + path.getFileName());
+    System.out.println("File root:   " + path.getRoot());
     System.out.println("File parent: " + path.getParent());
+    System.out.println("toString:    " + path.toString());
     
     try {
       // Delete file if it exists, won't throw an exception if file not existing
@@ -81,6 +94,24 @@ public class TestNIO {
     }
   }
   
+  List<String> getDirsString(String aPath) {
+    List<Path> pathList = getAllDirs(aPath);
+    List<String> rtnList = new ArrayList<String>(pathList.size());
+    for (Path aDir : pathList) {
+      rtnList.add(aDir.toString());
+    }
+    return rtnList;
+  }
+  
+  List<Path> getAllDirs(String aPath) {
+    try {
+      return Files.walk(Paths.get(aPath)).collect(Collectors.toList());
+    }
+    catch(Exception e) { e.printStackTrace(); }
+    return null;
+  }
+  
+  
   void listDirs(Path path) {
     try {
        DirectoryStream<Path> stream = Files.newDirectoryStream(path);        
@@ -91,7 +122,7 @@ public class TestNIO {
          }
          // files.add(entry);
     }
-    } catch(Exception e) { }
+    } catch(Exception e) { e.printStackTrace(); }
   }
  
   void listTree(Path path, String prefix) {
@@ -106,6 +137,24 @@ public class TestNIO {
     }
     } catch(Exception e) { }
   }
+  
+  private void testTree(String theDirectory) {
+    Path directory2Process = Paths.get(theDirectory);
+    
+    SimpleFileVisitorImpl simpleFileVisitorImpl = new SimpleFileVisitorImpl();
+    try {
+      Files.walkFileTree(directory2Process,  simpleFileVisitorImpl);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+    
+  }
+  
+  
+  
+  
   
   
 }
