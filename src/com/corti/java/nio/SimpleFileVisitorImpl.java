@@ -26,8 +26,7 @@ public class SimpleFileVisitorImpl extends SimpleFileVisitor<Path> {
   public FileVisitResult postVisitDirectory(Path path, IOException ioException) {
     System.out.println(path.toString() + " postVisitDirectory");
     return java.nio.file.FileVisitResult.CONTINUE;
-  }
-  
+  }  
 
   @Override
   public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes basicFileAttributes) {
@@ -44,7 +43,5 @@ public class SimpleFileVisitorImpl extends SimpleFileVisitor<Path> {
   public FileVisitResult visitFileFailed(Path path, IOException ioException) {
     System.out.println(path.toString() + " visitFileFailed");
     return java.nio.file.FileVisitResult.CONTINUE;
-  }
-  
-  
+  }  
 }

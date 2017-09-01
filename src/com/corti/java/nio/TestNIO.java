@@ -26,7 +26,7 @@ public class TestNIO {
       List<String> aList = myTest.getDirsString("/home/dev/workspace");
       for (String aStr : aList) System.out.println(aStr);
     }
-    if (true) myTest.testTree("/home/dev/workspace/TestIO");
+    if (true) myTest.testTree("c:/seanduff/workspace/TestIO"); ///home/dev/workspace/TestIO");
   }
 
   public void testAttributes() {
@@ -143,7 +143,7 @@ public class TestNIO {
     
     SimpleFileVisitorImpl simpleFileVisitorImpl = new SimpleFileVisitorImpl();
     try {
-      Files.walkFileTree(directory2Process,  simpleFileVisitorImpl);
+      Files.walkFileTree(directory2Process, simpleFileVisitorImpl);
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
