@@ -13,6 +13,7 @@ public class MakeBinaryFile {
 
     int sizeInMegabytes = 10;
     int nbDesiredBytes = sizeInMegabytes * 1024 * 1024;
+    nbDesiredBytes = sizeInMegabytes * 1024;
     int bufferSize = 1024;
     byte[] buffer = new byte[bufferSize];
     Random r = new Random();

@@ -9,11 +9,12 @@ public class ReadBinaryFile {
   private String file2Process;
 
   public static void main(String[] args) throws IOException, InterruptedException {
-    if (args.length != 1) {
+    if (args.length < 1) {
       System.out.println("Need to pass filename in");
       Thread.sleep(5000);
       System.exit(999);
     }
+    System.out.println("Input file: " + args[0]);
     ReadBinaryFile readBinaryFile = new ReadBinaryFile(args[0]);
     readBinaryFile.runTest();
   }
@@ -34,9 +35,26 @@ public class ReadBinaryFile {
     String base64String = convertBin2Base64(bytes);
     System.out.println(base64String);
     
+    // Want to show all the base64 bytes in the file and # of times it appears
+    char[] char64Bytes = base64String.toCharArray();
+    java.util.Arrays.sort(char64Bytes);
+    char lastChar = char64Bytes[0];
+    int theCount = 0;
+    for (int i = 0; i < char64Bytes.length; i++) {
+      if (char64Bytes[i] == lastChar) {
+        theCount++;
+      }
+      else {
+        System.out.println("Char: " + lastChar + " Count: " + Integer.toString(theCount));
+        theCount = 1;
+        lastChar = char64Bytes[i];
+      }
+    }
+    System.out.println("Char: " + lastChar + " Count: " + Integer.toString(theCount));
+    
+    
     System.out.println("\n\nDecoded base64 back to original below :)");
     byte[] decodedBytes = decodeBase64String(base64String);
-    decodedBytes[1] = '4';
     
     // Compare the decoded bytes back with original, just for fun :)
     int allMatch = (bytes.length - decodedBytes.length) - 1;  // Lens match value will be -1
