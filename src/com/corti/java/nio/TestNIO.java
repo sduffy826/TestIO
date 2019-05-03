@@ -17,16 +17,18 @@ public class TestNIO {
     // TODO Auto-generated method stub
 
     TestNIO myTest = new TestNIO();
-    if (false) myTest.testPath();
+    if (true) myTest.testPath();
     if (false) myTest.testFiles();
-    if (false) myTest.testAttributes();
-    if (false)  myTest.listDirs(Paths.get("/home/dev"));
+    if (true) myTest.testAttributes();
+    if (false)  myTest.listDirs(Paths.get("/seanduff"));
+    if (false)  myTest.listFiles(Paths.get("/seanduff"));
+    if (false)  myTest.listFiles(Paths.get("/seanduff"),"*.txt");
     if (false)  myTest.listDirs(Paths.get("/home/dev/thisIsADummyFile.txt"));
     if (false) {
-      List<String> aList = myTest.getDirsString("/home/dev/workspace");
+      List<String> aList = myTest.getDirsString("/seanduff/root");
       for (String aStr : aList) System.out.println(aStr);
     }
-    if (true) myTest.testTree("c:/seanduff/workspace/TestIO"); ///home/dev/workspace/TestIO");
+    if (false) myTest.testTree("c:/seanduff/workspace/TestIO"); ///home/dev/workspace/TestIO");
   }
 
   public void testAttributes() {
@@ -124,7 +126,31 @@ public class TestNIO {
     }
     } catch(Exception e) { e.printStackTrace(); }
   }
+  
+  void listFiles(Path path) {
+    try {
+       DirectoryStream<Path> stream = Files.newDirectoryStream(path);        
+       for (Path entry : stream) {
+         if (Files.isDirectory(entry) == false) {
+           System.out.println(entry.toString());           
+         }
+    }
+    } catch(Exception e) { e.printStackTrace(); }
+  }
  
+  void listFiles(Path path, String wildCard) {
+    try {
+       DirectoryStream<Path> stream = Files.newDirectoryStream(path, wildCard);        
+       for (Path entry : stream) {
+         if (Files.isDirectory(entry) == false) {
+           System.out.println(entry.toString());           
+         }
+    }
+    } catch(Exception e) { e.printStackTrace(); }
+  }
+ 
+  
+  
   void listTree(Path path, String prefix) {
     try {
        DirectoryStream<Path> stream = Files.newDirectoryStream(path);        
@@ -148,13 +174,6 @@ public class TestNIO {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    
-    
   }
-  
-  
-  
-  
-  
   
 }
