@@ -11,8 +11,8 @@ import java.nio.file.attribute.UserPrincipal;
 import java.util.Set;
 
 public class UnixFileAttributes extends FileAttributes {
-  private Set<PosixFilePermission> permissions;
-  PosixFileAttributes posixFileAttributes;
+  private transient Set<PosixFilePermission> permissions;
+  transient PosixFileAttributes posixFileAttributes;
   
   public UnixFileAttributes(String fileNameAndPath) throws Exception {
     super(fileNameAndPath);
