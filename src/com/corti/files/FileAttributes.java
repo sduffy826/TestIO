@@ -274,7 +274,7 @@ public abstract class FileAttributes implements Serializable {
         + ", isSymbolicLink=" + isSymbolicLink 
         + ", isOther=" + isOther 
         + ", sizeInBytes=" + sizeInBytes 
-        + ", checkSumValue=" + checkSumValue 
+        + ", checkSumValue=" + getCheckSumValue() 
         + ", exceptionMessage=" + exceptionMessage + "]";
   }
 
@@ -315,7 +315,7 @@ public abstract class FileAttributes implements Serializable {
     objectOutputStream.writeBoolean(isSymbolicLink);
     objectOutputStream.writeBoolean(isOther);
     objectOutputStream.writeLong(sizeInBytes);
-    objectOutputStream.writeUTF((checkSumValue==null ? "" : checkSumValue));
+    objectOutputStream.writeUTF((getCheckSumValue()==null ? "" : getCheckSumValue()));
     objectOutputStream.writeUTF(exceptionMessage); 
   }  
 }

@@ -80,8 +80,10 @@ public class CompareFileAttributesSerializationFiles {
     try(BufferedWriter writer = Files.newBufferedWriter(diffPath))  {
       for (PairOfInts pairOfInts : inBothButDiff) {
         writer.write(firstFileAttributesList.get(pairOfInts.a).getPathFromBaseAsUnix()
+                     + "," + firstFileAttributesList.get(pairOfInts.a).getFileExtension()
                      + "," + firstFileAttributesList.get(pairOfInts.a).getLastModifiedTime().toString()
                      + "," + secondFileAttributesList.get(pairOfInts.b).getLastModifiedTime().toString());
+        writer.newLine();
       }
     }
     System.out.println("Done");
@@ -100,7 +102,9 @@ public class CompareFileAttributesSerializationFiles {
     System.out.println("Writing missing files to: " + fileNameToOutput);
     try (BufferedWriter writer = Files.newBufferedWriter(path)) {
       for (Integer thePos : missingRecords) {
-        writer.write(fattr.get(thePos.intValue()).absolutePath);
+        writer.write(fattr.get(thePos.intValue()).absolutePath
+                     + "," + fattr.get(thePos.intValue()).getFileExtension());
+        writer.newLine();
       }
     } catch (IOException e) {
       e.printStackTrace();

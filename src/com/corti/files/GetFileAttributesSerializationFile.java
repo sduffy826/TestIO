@@ -8,8 +8,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileStore;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.nio.file.attribute.AclFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributeView;
@@ -62,7 +65,13 @@ public class GetFileAttributesSerializationFile {
     fileAttributeList = new ArrayList<FileAttributes>(2000);  // List of file attribute objects
     
     startingPath = (args.length > 0 ? args[0] : "c:/seanduff/workspace");
-
+    FileSystem fileSystem = FileSystems.getDefault();
+    List<PathMatcher> pathsToIgnore = new ArrayList<PathMatcher>(5);
+    
+    pathsToIgnore.add(fileSystem.getPathMatcher("glob:**/target*"));
+    pathsToIgnore.add(fileSystem.getPathMatcher("glob:**/workspace/.metadata*"));
+    pathsToIgnore.add(fileSystem.getPathMatcher("glob:**/workspace/.recommenders*"));
+    
     Path serializationPath = Paths.get(args.length > 1 ? args[1] : "FileAttributesSerialized.ser" );
     
     // Define base path and set 'startingAbsolutePath'; that's important... for lookup purposes
@@ -75,7 +84,7 @@ public class GetFileAttributesSerializationFile {
     Path basePath               = Paths.get(startingPath);
     String startingAbsolutePath =  basePath.toAbsolutePath().toString();
      
-    addPathsFromPath(basePath, fileList);
+    addPathsFromPath(basePath, fileList, pathsToIgnore);
     
     // If it has more data than we want to process then trim list to size we want
     if (num2Process > 0 && fileList.size() > num2Process)  
@@ -114,12 +123,20 @@ public class GetFileAttributesSerializationFile {
     System.out.println("Done, serialization file written to: " + serializationPath.toAbsolutePath().toString());
   }
       
-  // Get all the files from the path passed in, will recurse depth
-  private void addPathsFromPath(Path _dirPath, List<Path> pathList) {
+  // Get all the files from the path passed in, will recurse down... we will ignore the paths
+  //   that match the ones specified in paths2Ignore
+  private void addPathsFromPath(Path _dirPath, List<Path> pathList, List<PathMatcher> paths2Ignore) {
+    boolean skipIt;
     try (DirectoryStream<Path> stream = Files.newDirectoryStream(_dirPath)) {
       for (Path entry : stream) {
         if (Files.isDirectory(entry)) {
-          addPathsFromPath(entry,pathList);
+          skipIt = false;
+          for (PathMatcher pathMatcher: paths2Ignore) {
+            if (pathMatcher.matches(entry.toAbsolutePath()) == true ) 
+              skipIt = true;
+          }
+          if (skipIt == false)
+            addPathsFromPath(entry,pathList, paths2Ignore);
         }
         else {
           pathList.add(entry);
